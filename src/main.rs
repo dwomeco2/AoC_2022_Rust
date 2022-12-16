@@ -10,6 +10,8 @@ fn main() -> Result<()> {
     match user_input.trim() {
         "1_1" => days::day1::part1(),
         "1_2" => days::day1::part2(),
+        "2_1" => days::day2::part1(),
+        "2_2" => days::day2::part2(),
         _ => println!("Wrong input: ##{}##", user_input.as_str()),
     }
 
