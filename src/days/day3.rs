@@ -6,9 +6,8 @@ pub fn part1() {
     let result = INPUT
         .lines()
         .map(|l| l.split_at(l.len() / 2))
-        .map(|(f, s)| {
-            f.chars().find(|&c| s.contains(c)).map(priority).unwrap()
-        }).sum::<u32>();
+        .map(|(f, s)| f.chars().find(|&c| s.contains(c)).map(priority).unwrap())
+        .sum::<u32>();
     println!("{result}")
 }
 
@@ -18,9 +17,11 @@ pub fn part2() {
         .tuples()
         .map(|(a, b, c)| {
             a.chars()
-             .find(|&x| b.contains(x) && c.contains(x))
-             .map(priority).unwrap()
-        }).sum::<u32>();
+                .find(|&x| b.contains(x) && c.contains(x))
+                .map(priority)
+                .unwrap()
+        })
+        .sum::<u32>();
     println!("{result}");
 }
 
