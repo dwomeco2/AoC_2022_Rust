@@ -20,6 +20,7 @@ pub fn part2() {
     println!("{}", result.unwrap() + sop_len);
 }
 
+#[allow(dead_code)]
 fn find_disjoint_window(s: &[u8], w: usize) -> Option<usize> {
     let mut last_known_position = [0; 256];
     let mut start_disjoint = 0;
