@@ -22,6 +22,8 @@ fn main() -> Result<()> {
         "6_2" => days::day6::part2(),
         "7_1" => days::day7::part1(),
         "7_2" => days::day7::part2(),
+        "8_1" => days::day8::part1(),
+        "8_2" => days::day8::part2(),
         _ => println!("Wrong input: ##{}##", user_input.as_str()),
     }
 

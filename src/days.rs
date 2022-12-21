@@ -6,3 +6,4 @@ pub mod day5;
 pub mod day6;
 pub mod day7;
 pub mod day7_stack;
+pub mod day8;

@@ -1,3 +1,4 @@
+#![allow(warnings, unused)]
 use itertools::Itertools;
 
 const INPUT: &str = include_str!("../../input/day7");
