@@ -3,18 +3,18 @@ use std::{iter, collections::HashSet};
 const INPUT: &str = include_str!("../../input/day9");
 
 pub fn part1() {
-    let mut rope = Rope::new(2);
+    let rope = Rope::new(2);
     let result = tail_visited_count(rope);
     println!("{result}");
 }
 
 pub fn part2() {
-    let mut rope = Rope::new(10);
+    let rope = Rope::new(10);
     let result = tail_visited_count(rope);
     println!("{result}");
 }
 
-fn tail_visited_count(rope: Rope) -> usize {
+fn tail_visited_count(mut rope: Rope) -> usize {
     let mut hs: HashSet<Cor> = HashSet::new();
     
     for l in INPUT.lines() {
