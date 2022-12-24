@@ -23,7 +23,7 @@ pub fn part2() {
     let unused_total = total - total_used;
     let needed = 30_000_000u64 - unused_total;
 
-    let result = Node::all_dirs(root.clone())
+    let result = Node::all_dirs(root)
         .map(|d| d.borrow().total_size())
         .sorted_unstable()
         .find(|s| s >= &needed)
@@ -57,7 +57,7 @@ fn construct_dir_tree() -> Rc<RefCell<Node>> {
                 }
                 Entry::File(size, name) => {
                     let entry = node.borrow_mut().children.entry(name).or_default().clone();
-                    entry.borrow_mut().size = size as usize;
+                    entry.borrow_mut().size = size;
                     entry.borrow_mut().parent = Some(node.clone());
                 }
             },
@@ -123,6 +123,7 @@ impl Node {
             + self.size as u64
     }
     fn all_dirs(n: NodeHandle) -> Box<dyn Iterator<Item = NodeHandle>> {
+        #[allow(clippy::needless_collect)]
         let children = n.borrow().children.values().cloned().collect::<Vec<_>>();
 
         Box::new(

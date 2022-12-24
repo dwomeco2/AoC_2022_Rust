@@ -1,4 +1,3 @@
-
 const INPUT: &str = include_str!("../../input/day8");
 
 pub fn part1() {
@@ -36,9 +35,10 @@ pub fn part2() {
         for y in 1..grid.width - 1 {
             let curr = grid.cell((x, y).into()).unwrap();
             let step: [(isize, isize); 4] = [(-1, 0), (1, 0), (0, -1), (0, 1)];
-            let scenic_score = step.iter().map(|step| {
-                let line = (1..)
-                    .map_while(|i| {
+            let scenic_score = step
+                .iter()
+                .map(|step| {
+                    let line = (1..).map_while(|i| {
                         let cor = (
                             x.checked_add_signed(step.0 * i)?,
                             y.checked_add_signed(step.1 * i)?,
@@ -46,15 +46,16 @@ pub fn part2() {
 
                         grid.cell(cor.into())
                     });
-                let mut score = 0;
-                for c in line {
-                    score += 1;
-                    if c >= curr {
-                        break;
+                    let mut score = 0;
+                    for c in line {
+                        score += 1;
+                        if c >= curr {
+                            break;
+                        }
                     }
-                }
-                score
-            }).product::<usize>();
+                    score
+                })
+                .product::<usize>();
             score_max = score_max.max(scenic_score);
         }
     }

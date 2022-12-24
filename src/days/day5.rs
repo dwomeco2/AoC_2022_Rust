@@ -1,4 +1,3 @@
-
 use itertools::Itertools;
 
 const INPUT: &str = include_str!("../../input/day5");
@@ -45,13 +44,14 @@ fn process() -> (impl Iterator<Item = Move>, [Vec<u8>; 9]) {
         }
     });
 
-    (it.skip(2).map(|a| parse_move(a)), v)
+    (it.skip(2).map(parse_move), v)
 }
 
 type Move = (usize, usize, usize);
 
 fn parse_move(s: &str) -> Move {
     s.split_ascii_whitespace()
-     .flat_map(|s| s.parse::<usize>())
-     .collect_tuple::<Move>().unwrap()
+        .flat_map(|s| s.parse::<usize>())
+        .collect_tuple::<Move>()
+        .unwrap()
 }

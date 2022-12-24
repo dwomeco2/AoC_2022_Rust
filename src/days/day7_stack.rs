@@ -16,7 +16,7 @@ impl FsEntry {
 
     fn all_dirs(&self) -> Box<dyn Iterator<Item = &FsEntry> + '_> {
         Box::new(
-            std::iter::once(self.clone()).chain(
+            std::iter::once(self).chain(
                 self.children
                     .iter()
                     .filter(|c| !c.children.is_empty())

@@ -1,4 +1,4 @@
-use std::{iter, collections::HashSet};
+use std::{collections::HashSet, iter};
 
 const INPUT: &str = include_str!("../../input/day9");
 
@@ -16,7 +16,7 @@ pub fn part2() {
 
 fn tail_visited_count(mut rope: Rope) -> usize {
     let mut hs: HashSet<Cor> = HashSet::new();
-    
+
     for l in INPUT.lines() {
         let mut iter = l.split_whitespace();
         let dir: Cor = match iter.next().unwrap() {
@@ -27,13 +27,13 @@ fn tail_visited_count(mut rope: Rope) -> usize {
             _ => unreachable!(),
         };
         let steps = iter.next().unwrap().parse::<usize>().unwrap();
-        
+
         for d in iter::repeat(dir).take(steps) {
             rope.move_head(d);
             hs.insert(rope.tail().unwrap());
         }
     }
-    hs.iter().count()
+    hs.len()
 }
 
 #[derive(Copy, Clone, Eq, Hash, PartialEq, Default)]
@@ -51,14 +51,14 @@ impl From<(isize, isize)> for Cor {
 impl Cor {
     fn is_touching(&self, other: Cor) -> bool {
         let delta = (self.x - other.x, self.y - other.y);
-        delta.0 >= -1 && delta.0 <=1 && delta.1 >= -1 && delta.1 <= 1
+        delta.0 >= -1 && delta.0 <= 1 && delta.1 >= -1 && delta.1 <= 1
     }
-    
+
     fn follow(&self, other: Cor) -> Option<Cor> {
         if self.is_touching(other) {
             return None;
         }
-        
+
         let delta_x = match self.x.cmp(&other.x) {
             std::cmp::Ordering::Greater => 1,
             std::cmp::Ordering::Less => -1,
@@ -69,7 +69,7 @@ impl Cor {
             std::cmp::Ordering::Less => -1,
             _ => 0,
         };
-        
+
         Some((other.x + delta_x, other.y + delta_y).into())
     }
 }
@@ -85,18 +85,19 @@ impl Rope {
             knots: vec![Cor::default(); knot_count],
         }
     }
-    
+
     fn move_head(&mut self, cor: Cor) {
         let head = self.knots[0];
-        self.knots[0] = Cor { x: head.x + cor.x, y: head.y + cor.y };
-        
+        self.knots[0] = Cor {
+            x: head.x + cor.x,
+            y: head.y + cor.y,
+        };
+
         for i in 0..self.knots.len() - 1 {
-            let result = self.knots[i].follow(self.knots[i + 1]);
-            if result.is_some() {
-                self.knots[i + 1] = result.unwrap();
+            if let Some(result) = self.knots[i].follow(self.knots[i + 1]) {
+                self.knots[i + 1] = result;
             }
         }
-
     }
 
     fn tail(&self) -> Option<Cor> {

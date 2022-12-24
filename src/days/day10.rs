@@ -5,47 +5,47 @@ const INPUT: &str = include_str!("../../input/day10");
 pub fn part1() {
     let mut cpu = build_cpu();
     let mut sl = StrengthLogger::new(vec![20, 60, 100, 140, 180, 220]);
-        
+
     while !cpu.finished() {
         sl.log(cpu.cycle, cpu.get_register("X"));
         cpu.tick();
     }
-    
+
     let result = sl.logged_strength.iter().map(|&(_, s)| s).sum::<isize>();
     println!("{result}");
 }
 
 pub fn part2() {
     let mut cpu = build_cpu();
-    let mut crt = CRT::new(40, 6);
-        
+    let mut crt = Crt::new(40, 6);
+
     while !cpu.finished() {
         crt.draw(cpu.get_register("X"));
         cpu.tick();
     }
-    
+
     for l in crt.pixels.chunks(40) {
-        println!("{:?}", l.into_iter().collect::<String>());
+        println!("{:?}", l.iter().collect::<String>());
     }
 }
 
-fn build_cpu<'a>() -> CPU<'a> {
+fn build_cpu<'a>() -> Cpu<'a> {
     let mut registers = HashMap::new();
     registers.insert("X", 1);
-    
+
     let ins_prog = parse().map(|i| (i, i.needed_cycle()));
-    CPU::new(registers, ins_prog)
+    Cpu::new(registers, ins_prog)
 }
 
 fn parse() -> impl Iterator<Item = Instruction> {
     INPUT.lines().map(|l| match l {
         "noop" => Instruction::Noop,
         l if l.starts_with("addx") => {
-            let it = l.split_whitespace();
-            let val = it.skip(1).next().unwrap().parse::<isize>().unwrap();
+            let mut it = l.split_whitespace();
+            let val = it.nth(1).unwrap().parse::<isize>().unwrap();
             Instruction::Addx(val)
         }
-        _ => unreachable!()
+        _ => unreachable!(),
     })
 }
 
@@ -57,39 +57,41 @@ enum Instruction {
 
 impl Instruction {
     fn needed_cycle(&self) -> usize {
-        match self {
-            &Instruction::Noop => 1,
-            &Instruction::Addx(_) => 2,
+        match *self {
+            Instruction::Noop => 1,
+            Instruction::Addx(_) => 2,
         }
     }
 }
 
 type InstructionProgress = (Instruction, usize);
 
-struct CPU<'a> {
+struct Cpu<'a> {
     cycle: usize,
     registers: HashMap<&'a str, isize>,
     instructions: VecDeque<InstructionProgress>,
 }
 
-impl<'a> CPU<'a> {
-    pub fn new<I: Iterator<Item = InstructionProgress> + 'a>(registers: HashMap<&'a str, isize>, it: I) -> Self {
+impl<'a> Cpu<'a> {
+    pub fn new<I: Iterator<Item = InstructionProgress> + 'a>(
+        registers: HashMap<&'a str, isize>,
+        it: I,
+    ) -> Self {
         Self {
             cycle: 1,
             registers,
             instructions: it.collect(),
         }
     }
-    
+
     fn get_register(&self, name: &str) -> isize {
-        self.registers.get(name).unwrap().clone()
+        *self.registers.get(name).unwrap()
     }
-    
+
     fn tick(&mut self) {
         //During cycle
         let ins = self.instructions.pop_front();
-        if ins.is_some() {
-            let ins = ins.unwrap();
+        if let Some(ins) = ins {
             if ins.1 > 1 {
                 self.instructions.push_front((ins.0, ins.1 - 1));
             } else {
@@ -104,9 +106,9 @@ impl<'a> CPU<'a> {
         //After cycle
         self.cycle += 1;
     }
-    
+
     fn finished(&self) -> bool {
-        self.instructions.len() == 0
+        self.instructions.is_empty()
     }
 }
 
@@ -119,10 +121,10 @@ impl StrengthLogger {
     pub fn new(log_cycle: Vec<usize>) -> Self {
         Self {
             log_cycle,
-            logged_strength: vec![]
+            logged_strength: vec![],
         }
     }
-    
+
     fn log(&mut self, cycle: usize, val: isize) {
         // println!("{cycle} {val} {}", cycle as isize * val);
         if self.log_cycle.contains(&cycle) {
@@ -131,21 +133,22 @@ impl StrengthLogger {
     }
 }
 
-struct CRT {
+struct Crt {
     width: usize,
+    #[allow(dead_code)]
     height: usize,
     pixels: Vec<char>,
 }
 
-impl CRT {
+impl Crt {
     pub fn new(width: usize, height: usize) -> Self {
         Self {
             width,
             height,
-            pixels: vec![]
+            pixels: vec![],
         }
     }
-    
+
     fn draw(&mut self, reg_x: isize) {
         let curr_pos = (self.pixels.len() % self.width) as isize;
         if curr_pos >= reg_x - 1 && curr_pos <= reg_x + 1 {

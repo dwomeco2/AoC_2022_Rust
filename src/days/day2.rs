@@ -38,9 +38,9 @@ fn shape_score(my_pick: &str) -> u32 {
 fn prophet(round: &str) -> String {
     let mut s = String::from(&round[..2]);
     match round {
-        "B X" | "A Y" | "C Z" => s.push_str("X"),
-        "C X" | "B Y" | "A Z" => s.push_str("Y"),
-        _ => s.push_str("Z"),
+        "B X" | "A Y" | "C Z" => s.push('X'),
+        "C X" | "B Y" | "A Z" => s.push('Y'),
+        _ => s.push('Z'),
     }
     s
 }
