@@ -2,6 +2,10 @@ mod days;
 
 use std::io::Result;
 
+extern crate pest;
+#[macro_use]
+extern crate pest_derive;
+
 fn main() -> Result<()> {
     let mut user_input = String::new();
     let stdin = std::io::stdin();
@@ -32,6 +36,8 @@ fn main() -> Result<()> {
         "11_2" => days::day11::part2(),
         "12_1" => days::day12::part1(),
         "12_2" => days::day12::part2(),
+        "13_1" => days::day13::part1(),
+        "13_2" => days::day13::part2(),
         _ => println!("Wrong input: ##{}##", user_input.as_str()),
     }
 

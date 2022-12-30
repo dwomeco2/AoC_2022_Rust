@@ -5,4 +5,3 @@ format_strings = false
 reorder_imports = true
 group_imports = "StdExternalCrate"
 imports_layout = "Vertical"
-use_small_heuristics = "Max"

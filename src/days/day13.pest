@@ -1,0 +1,15 @@
+WHITESPACE = _{ " " }
+num = @{ ASCII_DIGIT* }
+value = { array | num }
+array = {
+    "[" ~ "]" |
+    "[" ~ value ~ ("," ~ value)* ~ "]" 
+}
+
+packetpair = { (array ~ NEWLINE?){2} ~ NEWLINE? }
+
+file = {
+    SOI ~
+    (packetpair)* ~
+    EOI?
+}
